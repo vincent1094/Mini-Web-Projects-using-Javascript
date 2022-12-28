@@ -3,14 +3,24 @@ const seats = document.querySelectorAll(".row .seat:not(.occupied)");
 const count = document.getElementById("count");
 const total = document.getElementById("total");
 const movieSelect = document.getElementById("movie");
+const seatTotal = document.querySelectorAll(".row .seat");
 
 let ticketPrice = +movieSelect.value;
+
+// Save selected movie index and price
+function setMovieData(movieIndex, moviePrice) {
+  localStorage.setItem('movieIndex', movieIndex);
+  localStorage.setItem('moviePrice', moviePrice);
+}
 
 // Update total and count
 function updateSelectedCount() {
   const selectedSeats = document.querySelectorAll(".row .seat.selected");
 
   const selectedSeatsCount = selectedSeats.length;
+
+  const seatsIndex  = [...selectedSeats].map(seat => [...seatTotal].indexOf(seat));
+  localStorage.setItem ('selectedSeats', JSON.stringify(seatsIndex));
 
   count.innerText = selectedSeatsCount;
   total.innerText = selectedSeatsCount * ticketPrice;
@@ -19,6 +29,7 @@ function updateSelectedCount() {
 // Movie select event
 movieSelect.addEventListener("change", e => {
   ticketPrice = +e.target.value;
+  setMovieData(e.target.selectedIndex, e.target.value); //Modular not affecting seats
   updateSelectedCount();
 })
 
